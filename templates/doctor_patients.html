@@ -1,0 +1,16 @@
+{% extends "layout_dashboard.html" %}
+
+{% block content %}
+    <h2 class="welcome-header">Your Patients</h2>
+
+    {% if patients %}
+        <!-- Iterate through the list of patients and display each Patient ID -->
+        <ul>
+            {% for patient in patients %}
+                <li>Patient ID: {{ patient.patient_id }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No patients found associated with this doctor.</p>
+    {% endif %}
+{% endblock %}

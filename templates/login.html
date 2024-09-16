@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<style>
+    body {
+        background: url('{{ url_for('static', filename='login_page_bg.jpg') }}') no-repeat center center fixed;
+        background-size: cover;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Welcome to the Medical Portal</h2>
+        <form action="{{ url_for('login') }}" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Username" required>
+            <br>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <br>
+            <label for="user_type">User Type:</label>
+            <select name="user_type" id="user_type" required>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="admin">Admin</option>
+            </select>
+            <br>
+            <input type="submit" value="Login">
+            {% if error %}
+                <p style="color:red;">{{ error }}</p>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

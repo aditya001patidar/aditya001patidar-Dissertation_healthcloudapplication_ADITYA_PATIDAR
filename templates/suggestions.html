@@ -1,0 +1,37 @@
+{% extends "layout_dashboard.html" %}
+
+{% block content %}
+    <h2 class="welcome-header">Precautions and Suggestions</h2>
+
+    <div class="suggestions-container">
+        <div class="card">
+            <h4>Predicted Sugar Level for next month <i class="fas fa-tint" style="float: right; color: #ff4757; font-size: 28px;"></i></h4>
+            <p>{{ predicted_data.sugar_level }}</p>
+            <p><strong>Guidance:</strong> {{ predicted_data.guidance_sugar_level }}</p>
+        </div>
+        <div class="card">
+            <h4>Predicted Blood Pressure for next month <i class="fas fa-heartbeat" style="float: right; color: #ff6b81; font-size: 28px;"></i></h4>
+            <p>{{ predicted_data.blood_pressure }}</p>
+            <p><strong>Guidance:</strong> {{ predicted_data.guidance_blood_pressure }}</p>
+        </div>
+        <div class="card">
+            <h4>Predicted Cholesterol Level for next month <i class="fas fa-vials" style="float: right; color: #ffa502; font-size: 28px;"></i></h4>
+            <p>{{ predicted_data.cholesterol }}</p>
+            <p><strong>Guidance:</strong> {{ predicted_data.guidance_cholesterol }}</p>
+        </div>
+        <div class="card">
+            <h4>Predicted BMI for next month <i class="fas fa-weight" style="float: right; color: #7bed9f; font-size: 28px;"></i></h4>
+            <p>{{ predicted_data.bmi }}</p>
+            <p><strong>Guidance:</strong> {{ predicted_data.guidance_bmi }}</p>
+        </div>
+        <div class="card">
+            <h4>Predicted HbA1c for next month <i class="fas fa-dna" style="float: right; color: #1e90ff; font-size: 28px;"></i></h4>
+            <p>{{ predicted_data.hba1c }}</p>
+            <p><strong>Guidance:</strong> {{ predicted_data.guidance_hba1c }}</p>
+        </div>
+    </div>
+
+    <div class="user-info-card">
+        <h4>{{ user['username'] }}</h4>
+    </div>
+{% endblock %}

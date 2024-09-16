@@ -1,0 +1,47 @@
+{% extends "layout_dashboard.html" %}
+
+{% block content %}
+    <!-- Adding some margin to the welcome text -->
+    <h2 class="welcome-header" style="margin-top: 20px; margin-bottom: 20px;">Welcome back, {{ user['username'] }}</h2>
+    
+    <div class="grid-container">
+        <div class="card">
+            <h4>Sugar Level (mg/dl) <i class="fas fa-tint" style="float: right; color: #ff4757; font-size: 34px;"></i></h4>
+            <p class="value">Latest: {{ "%.2f"|format(user_data.latest_sugar_level) }}</p>
+            <p class="value">Avg: {{ "%.2f"|format(user_data.avg_sugar_level) }}</p>
+        </div>
+        <div class="card">
+            <h4>Blood Pressure (mmHg) <i class="fas fa-heartbeat" style="float: right; color: #ff6b81; font-size: 34px;"></i></h4>
+            <p class="value">Latest: {{ "%.0f"|format(user_data.latest_systolic) }}/{{ "%.0f"|format(user_data.latest_diastolic) }}</p>
+            <p class="value">Avg: {{ "%.0f"|format(user_data.avg_systolic) }}/{{ "%.0f"|format(user_data.avg_diastolic) }}</p>
+        </div>
+        <div class="card">
+            <h4>Cholesterol Level (mg/dl) <i class="fas fa-vials" style="float: right; color: #ffa502; font-size: 34px;"></i></h4>
+            <p class="value">Latest: {{ "%.2f"|format(user_data.latest_cholesterol) }}</p>
+            <p class="value">Avg: {{ "%.2f"|format(user_data.avg_cholesterol) }}</p>
+        </div>
+        <div class="card">
+            <h4>BMI <i class="fas fa-weight" style="float: right; color: #7bed9f; font-size: 34px;"></i></h4>
+            <p class="value">Latest: {{ "%.2f"|format(user_data.latest_bmi) }}</p>
+            <p class="value">Avg: {{ "%.2f"|format(user_data.avg_bmi) }}</p>
+        </div>
+        <div class="card">
+            <h4>HbA1c % <i class="fas fa-dna" style="float: right; color: #1e90ff; font-size: 34px;"></i></h4>
+            <p class="value">Latest: {{ "%.2f"|format(user_data.latest_hba1c) }}</p>
+            <p class="value">Avg: {{ "%.2f"|format(user_data.avg_hba1c) }}</p>
+        </div>
+    </div>
+
+    <div class="user-info-card">
+        {% if user.gender == 'Male' %}
+            <img src="{{ url_for('static', filename='male_profile.jpg') }}" alt="Profile Image">
+        {% elif user.gender == 'Female' %}
+            <img src="{{ url_for('static', filename='female_profile.jpg') }}" alt="Profile Image">
+        {% else %}
+            <img src="{{ url_for('static', filename='default_profile.jpg') }}" alt="Profile Image">
+        {% endif %}
+        <h4>{{ user['username'] }}</h4>
+        <p>Gender: {{ user.gender }}</p>
+        <p>Age: {{ user.age }} years</p>
+    </div>
+{% endblock %}

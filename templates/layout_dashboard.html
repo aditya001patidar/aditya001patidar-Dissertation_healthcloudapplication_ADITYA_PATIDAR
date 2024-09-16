@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <div class="user-profile">
+            <!-- Check if a user or doctor is logged in, then display appropriate profile image -->
+            {% if session['user_type'] == 'patient' %}
+                <img src="{{ url_for('static', filename='patient_profile.png') }}" alt="Profile Picture" class="profile-img">
+                <h4>{{ user.name }}</h4>
+            {% elif session['user_type'] == 'doctor' %}
+                <img src="{{ url_for('static', filename='doctor_profile.png') }}" alt="Profile Picture" class="profile-img">
+                <h4>{{ doctor.username }}</h4>
+            {% else %}
+                <img src="{{ url_for('static', filename='default_profile.png') }}" alt="Profile Picture" class="profile-img">
+            {% endif %}
+            <h2 class="profile-title">{{ session['user_type']|capitalize }} Profile</h2>
+        </div>
+
+        <!-- Conditional Navigation Links based on User Type -->
+        {% if session['user_type'] == 'patient' %}
+            <a href="{{ url_for('patient_dashboard') }}">My Profile</a>
+            <a href="{{ url_for('suggestions') }}">Treatment Plan</a>
+            <a href="#prescriptions">Prescriptions</a>
+            <a href="#doc">See My Doc</a>
+            <a href="#health">Health Record</a>
+            <a href="{{ url_for('insurance') }}">Insurance</a>
+        {% elif session['user_type'] == 'doctor' %}
+            <a href="{{ url_for('doctor_dashboard') }}">Dashboard</a>
+            <a href="{{ url_for('doctor_patients') }}">Your Patient Info</a>
+        {% endif %}
+    </div>
+
+    <div class="main-content">
+        {% block content %}
+        <!-- Content goes here -->
+        {% endblock %}
+    </div>
+</body>
+</html>

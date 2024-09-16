@@ -1,0 +1,27 @@
+{% extends "layout_dashboard.html" %}
+
+{% block content %}
+    <h2 class="welcome-header">Doctor Dashboard</h2>
+
+    <!-- Search Form for Patient ID -->
+    <form method="POST">
+        <input type="text" name="patient_id" placeholder="Enter Patient ID" required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display Patient Information if Found -->
+    {% if search and patient %}
+        <div class="card">
+            <h4 style="color: black;">Patient Name: {{ patient.name }}</h4>
+            <p><i class="fas fa-id-badge" style="color: green;"></i> <strong>Patient ID:</strong> {{ patient.patient_id }}</p>
+            <p><i class="fas fa-tint" style="color: red;"></i> <strong>Blood Group:</strong> {{ patient.blood_group }}</p>
+            <p><i class="fas fa-notes-medical" style="color: teal;"></i> <strong>Disease:</strong> {{ patient.disease }}</p>
+            <p><i class="fas fa-pills" style="color: darkblue;"></i> <strong>Medications:</strong> {{ patient.medications }}</p>
+            <p><i class="fas fa-utensils" style="color: orange;"></i> <strong>Dietary Restrictions:</strong> {{ patient.dietary_restrictions }}</p>
+            <p><i class="fas fa-smoking" style="color: brown;"></i> <strong>Smoking Status:</strong> {{ patient.smoking_status }}</p>
+            <p><i class="fas fa-wine-glass-alt" style="color: grey;"></i> <strong>Alcohol Consumption:</strong> {{ patient.alcohol_consumption }}</p>
+        </div>
+    {% elif search %}
+        <p>No patient found with the given ID.</p>
+    {% endif %}
+{% endblock %}
