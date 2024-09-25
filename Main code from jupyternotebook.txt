@@ -1,0 +1,1593 @@
+import pandas as pd
+from faker import Faker
+import random
+
+# Initialize Faker
+fake = Faker('en_GB')
+
+# Define the number of rows
+num_rows = 10000
+
+# Generate columns
+patient_ids = [fake.uuid4() for _ in range(num_rows)]
+names = [fake.name() for _ in range(num_rows)]
+ages = [random.randint(18, 90) for _ in range(num_rows)]
+genders = [fake.random_element(elements=('Male', 'Female')) for _ in range(num_rows)]
+addresses = [fake.address().replace('\n', ', ') for _ in range(num_rows)]
+contact_numbers = [fake.phone_number() for _ in range(num_rows)]
+emails = [fake.email() for _ in range(num_rows)]
+blood_groups = [fake.random_element(elements=('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')) for _ in range(num_rows)]
+diseases = ['Diabetes' for _ in range(num_rows)]
+date_of_diagnosis = [fake.date_this_decade() for _ in range(num_rows)]
+sugar_levels = [round(random.uniform(70, 180), 2) for _ in range(num_rows)]
+hba1c_levels = [round(random.uniform(4.0, 10.0), 1) for _ in range(num_rows)]
+medications = [fake.random_element(elements=('Metformin', 'Glipizide', 'Glyburide', 'Glimepiride')) for _ in range(num_rows)]
+insulin_usage = [fake.random_element(elements=('Yes', 'No')) for _ in range(num_rows)]
+dietary_restrictions = [fake.random_element(elements=('Low Sugar', 'Low Carb', 'Low Fat', 'Balanced Diet')) for _ in range(num_rows)]
+exercise_regimens = [fake.random_element(elements=('Daily', 'Weekly', 'Occasionally', 'Never')) for _ in range(num_rows)]
+bmi_values = [round(random.uniform(18.5, 35.0), 1) for _ in range(num_rows)]
+blood_pressures = [f"{random.randint(90, 140)}/{random.randint(60, 90)}" for _ in range(num_rows)]
+cholesterol_levels = [round(random.uniform(150, 250), 2) for _ in range(num_rows)]
+family_histories = [fake.random_element(elements=('Yes', 'No')) for _ in range(num_rows)]
+smoking_statuses = [fake.random_element(elements=('Current Smoker', 'Former Smoker', 'Never Smoked')) for _ in range(num_rows)]
+alcohol_consumptions = [fake.random_element(elements=('None', 'Occasional', 'Moderate', 'Heavy')) for _ in range(num_rows)]
+regular_checkups = [fake.random_element(elements=('Yes', 'No')) for _ in range(num_rows)]
+emergency_contacts = [fake.phone_number() for _ in range(num_rows)]
+insurance_details = [fake.random_element(elements=('Private', 'Public', 'None')) for _ in range(num_rows)]
+food_intake = [f"{fake.random_element(elements=('Breakfast', 'Lunch', 'Dinner', 'Snack'))}: {fake.random_element(elements=('Apple', 'Banana', 'Chicken', 'Salad', 'Pasta', 'Bread', 'Rice', 'Soup', 'Vegetables'))}, {fake.random_int(min=50, max=500)}g, {fake.time()}" for _ in range(num_rows)]
+medication_dosage = [f"{fake.random_element(elements=('Metformin', 'Glipizide', 'Glyburide', 'Glimepiride'))}, {fake.random_int(min=1, max=4)} pills, {fake.time()}" for _ in range(num_rows)]
+exercise_details = [f"{fake.random_element(elements=('Running', 'Walking', 'Cycling', 'Swimming', 'Yoga', 'Gym'))}, {fake.random_int(min=10, max=120)} minutes" for _ in range(num_rows)]
+doctor_names = [fake.name() for _ in range(num_rows)]
+unique_hospital_names = [fake.company() for _ in range(50)] 
+unique_administrator_names = [fake.name() for _ in range(50)]  
+
+#Assign hospital names, and administrator names
+hospital_names = [unique_hospital_names[i % len(unique_hospital_names)] for i in range(num_rows)]
+administrator_names = [unique_administrator_names[i % len(unique_administrator_names)] for i in range(num_rows)]
+
+
+# Create DataFrame
+df = pd.DataFrame({
+    'PatientID': patient_ids,
+    'Name': names,
+    'Age': ages,
+    'Gender': genders,
+    'Address': addresses,
+    'ContactNumber': contact_numbers,
+    'Email': emails,
+    'BloodGroup': blood_groups,
+    'Disease': diseases,
+    'DateOfDiagnosis': date_of_diagnosis,
+    'SugarLevel': sugar_levels,
+    'HbA1c': hba1c_levels,
+    'Medications': medications,
+    'InsulinUsage': insulin_usage,
+    'DietaryRestrictions': dietary_restrictions,
+    'ExerciseRegimen': exercise_regimens,
+    'BMI': bmi_values,
+    'BloodPressure': blood_pressures,
+    'CholesterolLevel': cholesterol_levels,
+    'FamilyHistory': family_histories,
+    'SmokingStatus': smoking_statuses,
+    'AlcoholConsumption': alcohol_consumptions,
+    'RegularCheckups': regular_checkups,
+    'EmergencyContacts': emergency_contacts,
+    'InsuranceDetails': insurance_details,
+    'FoodIntake': food_intake,
+    'MedicationDosage': medication_dosage,
+    'ExerciseDetails': exercise_details,
+    'DoctorName': doctor_names,
+    'HospitalName': hospital_names,  
+    'AdministratorName': administrator_names  
+})
+
+# Save DataFrame to CSV
+df.to_csv('Diabetes_dataset.csv', index=False)
+
+print("Dataset created and saved to Diabetes_dataset.csv")
+---------------------------------------------------------------------------------------------------------------------------------
+
+# adding 3month data to parametrs like sugarlevel, cholesterol,etc 
+
+import pandas as pd
+import numpy as np
+
+# Load the dataset
+file_path = 'D:/DATA SETS, Research papers/dataset main/Diabetes_dataset.xlsx' 
+df = pd.read_excel(file_path)
+
+# Function to generate realistic values based on the existing value
+def generate_monthly_values(current_value, variation_percentage=0.1):
+    # Check if the current value is numeric
+    if isinstance(current_value, (int, float)):
+        # Calculate the possible variation
+        variation = current_value * variation_percentage
+        return [
+            round(current_value + np.random.uniform(-variation, variation), 2),
+            round(current_value + np.random.uniform(-variation, variation), 2),
+            round(current_value + np.random.uniform(-variation, variation), 2)
+        ]
+    else:
+        # If the value is not numeric, return NaN for the three months
+        return [np.nan, np.nan, np.nan]
+
+# Add columns for each parameter with realistic monthly data
+parameters = ['SugarLevel', 'BloodPressure', 'CholesterolLevel', 'BMI', 'HbA1c']
+
+for param in parameters:
+    month1, month2, month3 = zip(*df[param].apply(generate_monthly_values))
+    df[f'{param}_Month1'] = month1
+    df[f'{param}_Month2'] = month2
+    df[f'{param}_Month3'] = month3
+
+# Save the updated dataset
+output_file_path = 'D:/DATA SETS, Research papers/dataset main/Updated_Diabetes_dataset.xlsx'
+df.to_excel(output_file_path, index=False)
+
+print("Monthly data columns added and dataset saved as 'Updated_Diabetes_dataset.xlsx'")
+--------------------------------------------------------------------------------------------------------
+
+#adding total 7 months of data in every parameter
+
+import pandas as pd
+import numpy as np
+
+# Load the dataset
+file_path = 'D:/DATA SETS, Research papers/dataset main/Updated_Diabetes_dataset.xlsx' 
+df = pd.read_excel(file_path)
+
+# Function to generate realistic values based on the existing value
+def generate_monthly_values(current_value, variation_percentage=0.1):
+    # Check if the current value is numeric
+    if isinstance(current_value, (int, float)):
+        # Calculate the possible variation
+        variation = current_value * variation_percentage
+        return [
+            round(current_value + np.random.uniform(-variation, variation), 2)
+            for _ in range(4)  # Generate 4 more values to extend to Month4, Month5, Month6, Month7
+        ]
+    else:
+        # If the value is not numeric, return NaN for the additional months
+        return [np.nan, np.nan, np.nan, np.nan]
+
+# Parameters to extend
+parameters = ['SugarLevel', 'BloodPressure', 'CholesterolLevel', 'BMI', 'HbA1c']
+
+# Add columns for each parameter with realistic monthly data
+for param in parameters:
+    # Generate values for 4 more months based on Month3 values
+    generated_data = df[f'{param}_Month3'].apply(generate_monthly_values)
+    
+    for i in range(4):
+        df[f'{param}_Month{i+4}'] = generated_data.apply(lambda x: x[i] if x else np.nan)
+
+# Save the updated dataset
+output_file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset.xlsx'
+df.to_excel(output_file_path, index=False)
+
+print(f"7 months of data added and dataset saved as 'New_Updated_Diabetes_dataset3.xlsx'")
+------------------------------------------------------------------------------------------------------------------------------
+
+# adding the adminID and doctorID column along with their passwords in the dataset.
+#New_Updated_Diabetes_dataset3
+
+import pandas as pd
+
+# Load the dataset
+file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset2.xlsx'
+df = pd.read_excel(file_path)
+
+# 1) Replace 'Client ID' with 'Patient ID' and prepend 'P' to the ID
+if 'Client ID' in df.columns:
+    df.rename(columns={'Client ID': 'Patient ID'}, inplace=True)
+    df['Patient ID'] = 'P' + df['Patient ID']
+else:
+    print("'Client ID' column not found.")
+
+# 2) Create 'Patient Password' column by removing the leading 'P' from 'Patient ID'
+df['Patient Password'] = df['Patient ID'].str[1:]
+
+# 3) Create 'Admin ID' and 'Admin Password' columns using 'AdministratorName'
+if 'AdministratorName' in df.columns:
+    df['Admin ID'] = 'A' + df['AdministratorName'].str.split().apply(lambda x: ''.join([name[0].upper() for name in x])) + df['Patient Password']
+    df['Admin Password'] = df['Admin ID'].str[1:]
+else:
+    print("'AdministratorName' column not found.")
+
+# 4) Create 'Doctor ID' and 'Doctor Password' columns
+if 'DoctorName' in df.columns:
+    df['Doctor ID'] = df['DoctorName'].str.replace(r'^DR\.\s*', '', regex=True)  # Remove the 'DR.' prefix
+    df['Doctor ID'] = 'D' + df['Doctor ID'].str.split().apply(lambda x: ''.join([name[0].upper() for name in x])) + df['Patient Password']
+    df['Doctor Password'] = df['Doctor ID'].str[1:]
+else:
+    print("'DoctorName' column not found.")
+
+# Save the updated dataframe to a new Excel file
+output_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx'
+df.to_excel(output_path, index=False)
+
+print(f"The dataset has been successfully updated and saved as New_Updated_Diabetes_dataset3.xlsx")
+---------------------------------------------------------------------------------------------------------------
+
+import pandas as pd
+
+# Load the Excel dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+print(df.head())
+print(df.info())
+
+
+------------------------------------------------------------------------------------------------------------
+
+#Data Preprocessing
+# Check for missing values
+print(df.isnull().sum())
+
+# Fill missing values with median for numerical columns and mode for categorical columns
+for column in df.select_dtypes(include=['number']).columns:
+    df[column].fillna(df[column].median(), inplace=True)
+
+for column in df.select_dtypes(include=['object']).columns:
+    df[column].fillna(df[column].mode()[0], inplace=True)
+
+#Purpose: Handle missing values to ensure a complete dataset for analysis.
+
+-----------------------------------------------------------------------------------------------------------------
+#Plots 
+
+#1A Plot distribution of Age
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Plot distribution of Age
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Age'], kde=True, bins=30)
+
+# Adding the values above each bar
+for p in plt.gca().patches:
+    plt.gca().annotate(f'{int(p.get_height())}', 
+                       (p.get_x() + p.get_width() / 2., p.get_height()), 
+                       ha='center', va='baseline', fontsize=10, color='black', xytext=(0, 5), 
+                       textcoords='offset points')
+
+plt.title('Age Distribution')
+plt.show()
+-----------------------------------------------------------------------------------------------------------------
+
+#1B Plot distribution of Sugarlevels across all months 
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Assuming the dataset has already been loaded into `df`
+
+# Create subplots for 7 months with the layout of 2-2-2-1
+fig, axs = plt.subplots(4, 2, figsize=(16,26))
+
+# List of month columns and corresponding colors
+months = ['SugarLevel_Month1', 'SugarLevel_Month2', 'SugarLevel_Month3',
+          'SugarLevel_Month4', 'SugarLevel_Month5', 'SugarLevel_Month6',
+          'SugarLevel_Month7']
+colors = ['blue', 'green', 'red', 'purple', 'orange', 'brown', 'pink']
+
+# Plot for each month's Sugar Level
+plot_order = [(0, 0), (0, 1), (1, 0), (1, 1), (2, 0), (2, 1), (3, 0)]
+
+for i, month in enumerate(months):
+    sns.histplot(df[month], kde=True, bins=30, ax=axs[plot_order[i]], color=colors[i])
+    axs[plot_order[i]].set_title(f'Sugar Level {month}')
+    axs[plot_order[i]].set_xlabel('Sugar Level')
+    axs[plot_order[i]].set_ylabel('Frequency')
+
+    # Adding vertically rotated bar labels
+    for container in axs[plot_order[i]].containers:
+        axs[plot_order[i]].bar_label(container, rotation=90)
+
+# Remove the empty subplot in the last column of the last row
+fig.delaxes(axs[3, 1])
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+--------------------------------------------------------------------------------------------------------------------------------
+
+#2 A Plot distribution of Gender, Dietary Restrictions, Medication Type
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Plot distribution of Gender
+plt.figure(figsize=(7, 6))
+ax = sns.countplot(x='Gender', data=df)
+ax.set_title('Gender Distribution')
+ax.bar_label(ax.containers[0], fmt='%d')  
+plt.show()
+
+# Plot distribution of Dietary Restrictions
+plt.figure(figsize=(8, 6))
+ax = sns.countplot(x='DietaryRestrictions', data=df)
+ax.set_title('Dietary Restrictions Distribution')
+ax.bar_label(ax.containers[0], fmt='%d')  
+plt.show()
+
+# Plot distribution of Medication Type
+plt.figure(figsize=(8, 6))
+ax = sns.countplot(x='Medications', data=df)
+ax.set_title('Medication Type Distribution')
+ax.bar_label(ax.containers[0], fmt='%d')  
+plt.show()
+
+----------------------------------------------------------------------------------------------------------------------------
+#Statistical summary
+
+#1 Statistical Summary
+# Statistical summary of numerical columns
+print(df.describe())
+
+# Statistical summary of categorical columns
+print(df.describe(include=['object']))
+
+
+---------------------------------------------------------------------------------------------
+
+# BMI
+# 7 months plot for BMI
+
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Function to annotate histogram bars
+def annotate_hist(ax, bins):
+    for p in ax.patches:
+        height = int(p.get_height())
+        if height > 0:  # Annotate only non-zero bars
+            ax.annotate(f'{height}', 
+                        (p.get_x() + p.get_width() / 2., height),
+                        ha='center', va='center', 
+                        xytext=(0, 9), textcoords='offset points')
+
+# List of months for BMI
+months = ['Month1', 'Month2', 'Month3', 'Month4', 'Month5', 'Month6', 'Month7']
+colors = ['blue', 'green', 'red', 'purple', 'orange', 'brown', 'pink']
+
+# Plot distribution of BMI for each month in 2-2-2-1 layout
+fig, axs = plt.subplots(4, 2, figsize=(20.5, 26))
+axs = axs.flatten()  # Flatten the array of axes for easier indexing
+
+for i, month in enumerate(months):
+    sns.histplot(df[f'BMI_{month}'], kde=True, bins=30, ax=axs[i], color=colors[i])
+    axs[i].set_title(f'BMI Distribution - {month}')
+    axs[i].set_xlabel('BMI')
+    axs[i].set_ylabel('Frequency')
+    annotate_hist(axs[i], bins=30)
+
+# Hide the empty subplot (the 8th subplot)
+fig.delaxes(axs[-1])
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+---------------------------------------------------------------------------------------------
+
+#HbA1c
+# 7 months plot for HbA1c levels
+
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Function to annotate histogram bars
+def annotate_hist(ax, bins):
+    for p in ax.patches:
+        height = int(p.get_height())
+        if height > 0:  # Annotate only non-zero bars
+            ax.annotate(f'{height}', 
+                        (p.get_x() + p.get_width() / 2., height),
+                        ha='center', va='center', 
+                        xytext=(0, 9), textcoords='offset points')
+
+# List of months for HbA1c
+months = ['Month1', 'Month2', 'Month3', 'Month4', 'Month5', 'Month6', 'Month7']
+colors = ['cyan', 'magenta', 'yellow', 'lime', 'teal', 'maroon', 'navy']
+
+# Plot distribution of HbA1c levels for each month in 2-2-2-1 layout
+fig, axs = plt.subplots(4, 2, figsize=(20.5, 26))
+axs = axs.flatten()  # Flatten the array of axes for easier indexing
+
+for i, month in enumerate(months):
+    sns.histplot(df[f'HbA1c_{month}'], kde=True, bins=30, ax=axs[i], color=colors[i])
+    axs[i].set_title(f'HbA1c Level Distribution - {month}')
+    axs[i].set_xlabel('HbA1c Level')
+    axs[i].set_ylabel('Frequency')
+    annotate_hist(axs[i], bins=30)
+
+# Hide the empty subplot (the 8th subplot)
+fig.delaxes(axs[-1])
+
+# Adjust layout
+plt.tight_layout()
+plt.show()
+-------------------------------------------------------------------------------------------------------------
+
+#3 Plot distribution of Smoking Status, Alcohol Consumption, Exercise Regimen, Family History, Regular Checkups
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Function to annotate bars
+def annotate_bars(ax):
+    for p in ax.patches:
+        ax.annotate(f'{p.get_height()}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                    ha='center', va='center', xytext=(0, 9), textcoords='offset points')
+
+# Plot distribution of Smoking Status
+plt.figure(figsize=(8, 7.5))
+ax = sns.countplot(x='SmokingStatus', data=df)
+plt.title('Smoking Status Distribution')
+annotate_bars(ax)
+plt.show()
+
+# Plot distribution of Alcohol Consumption
+plt.figure(figsize=(7, 6))
+ax = sns.countplot(x='AlcoholConsumption', data=df)
+plt.title('Alcohol Consumption Distribution')
+annotate_bars(ax)
+plt.show()
+
+# Plot distribution of Exercise Regimen
+plt.figure(figsize=(7, 6))
+ax = sns.countplot(x='ExerciseRegimen', data=df)
+plt.title('Exercise Regimen Distribution')
+annotate_bars(ax)
+plt.show()
+
+# Plot distribution of Family History
+plt.figure(figsize=(7, 6))
+ax = sns.countplot(x='FamilyHistory', data=df)
+plt.title('Family History Distribution')
+annotate_bars(ax)
+plt.show()
+
+# Plot distribution of Regular Checkups
+plt.figure(figsize=(7, 6))
+ax = sns.countplot(x='RegularCheckups', data=df)
+plt.title('Regular Checkups Distribution')
+annotate_bars(ax)
+plt.show()
+-----------------------------------------------------------------------------------------------------------------
+
+#4 BAR PLOTS
+# Bar plot of average Sugar Level by Gender
+# Bar plot of average BMI by Dietary Restrictions
+# Bar plot of average HbA1c by Exercise Regimen
+# Bar plot of average Cholesterol Level by Smoking Status
+
+# Bar plot of average Sugar Level by Gender, average BMI by Dietary Restrictions,
+#average HbA1c by Exercise Regimen, average HbA1c by Exercise Regimen, average Cholesterol Level by Smoking Status
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Load the dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Calculate the average for Sugar Level, BMI, HbA1c, and Cholesterol Level across 7 months
+df['Avg_SugarLevel'] = df[[f'SugarLevel_Month{i}' for i in range(1, 8)]].mean(axis=1)
+df['Avg_BMI'] = df[[f'BMI_Month{i}' for i in range(1, 8)]].mean(axis=1)
+df['Avg_HbA1c'] = df[[f'HbA1c_Month{i}' for i in range(1, 8)]].mean(axis=1)
+df['Avg_CholesterolLevel'] = df[[f'CholesterolLevel_Month{i}' for i in range(1, 8)]].mean(axis=1)
+
+# Function to add values on top of bars
+def add_values_on_bars(ax):
+    for p in ax.patches:
+        ax.annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                    ha='center', va='center', xytext=(0, 9), textcoords='offset points')
+
+# Bar plot of average Sugar Level by Gender
+plt.figure(figsize=(7, 5))
+ax = sns.barplot(x='Gender', y='Avg_SugarLevel', data=df, palette='Set2')
+add_values_on_bars(ax)
+plt.title('Average Sugar Level by Gender')
+plt.show()
+
+# Bar plot of average BMI by Dietary Restrictions
+plt.figure(figsize=(9, 5))
+ax = sns.barplot(x='DietaryRestrictions', y='Avg_BMI', data=df, palette='Set3')
+add_values_on_bars(ax)
+plt.title('Average BMI by Dietary Restrictions')
+plt.show()
+
+# Bar plot of average HbA1c by Exercise Regimen
+plt.figure(figsize=(9, 5))
+ax = sns.barplot(x='ExerciseRegimen', y='Avg_HbA1c', data=df, palette='coolwarm')
+add_values_on_bars(ax)
+plt.title('Average HbA1c by Exercise Regimen')
+plt.show()
+
+# Bar plot of average Cholesterol Level by Smoking Status
+plt.figure(figsize=(9, 5))
+ax = sns.barplot(x='SmokingStatus', y='Avg_CholesterolLevel', data=df, palette='Paired')
+add_values_on_bars(ax)
+plt.title('Average Cholesterol Level by Smoking Status')
+plt.show()
+--------------------------------------------------------------------------------------------------------
+
+# Grouped analysis by Gender and Medication (using average Sugar Level)
+# Grouped analysis by Exercise Regimen and Family History (using average HbA1c)
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+
+# Load the dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Calculate the average for Sugar Level and HbA1c across 7 months
+df['Avg_SugarLevel'] = df[[f'SugarLevel_Month{i}' for i in range(1, 8)]].mean(axis=1)
+df['Avg_HbA1c'] = df[[f'HbA1c_Month{i}' for i in range(1, 8)]].mean(axis=1)
+
+# Function to annotate bars
+def annotate_bars(ax):
+    for p in ax.patches:
+        ax.annotate(f'{p.get_height():.2f}', (p.get_x() + p.get_width() / 2., p.get_height()),
+                    ha='center', va='center', xytext=(0, 9), textcoords='offset points')
+
+# Grouped analysis by Gender and Medication (using average Sugar Level)
+plt.figure(figsize=(11, 6))
+ax = sns.barplot(x='Gender', y='Avg_SugarLevel', hue='Medications', data=df)
+plt.title('Average Sugar Level by Gender and Medication')
+annotate_bars(ax)
+plt.show()
+
+# Grouped analysis by Exercise Regimen and Family History (using average HbA1c)
+plt.figure(figsize=(10, 6))
+ax = sns.barplot(x='ExerciseRegimen', y='Avg_HbA1c', hue='FamilyHistory', data=df)
+plt.title('Average HbA1c by Exercise Regimen and Family History')
+annotate_bars(ax)
+plt.show()
+----------------------------------------------------------------------------------------------------------------------------
+
+#Main ML code below
+
+#Random forest model
+
+# Step 1: Importing Necessary Libraries
+# Purpose: Importing necessary libraries for data handling, model creation, and evaluation.
+
+!pip install xgboost
+!pip install lightgbm
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+from xgboost import XGBRegressor
+from lightgbm import LGBMRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.neural_network import MLPRegressor
+
+# Step 2: Load the Dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Step 3: Feature Engineering
+# Creating target columns for Month 8 based on Month 7 data
+df['BloodPressure_Month8'] = df['BloodPressure_Month7']
+df['CholesterolLevel_Month8'] = df['CholesterolLevel_Month7']
+df['SugarLevel_Month8'] = df['SugarLevel_Month7']
+df['BMI_Month8'] = df['BMI_Month7']
+df['HbA1c_Month8'] = df['HbA1c_Month7']
+
+# Step 4: Modify the Blood Pressure Columns
+# Function to split the blood pressure values into systolic and diastolic
+def split_bp(bp_value):
+    try:
+        systolic, diastolic = map(int, bp_value.split('/'))
+        return systolic, diastolic
+    except:
+        return np.nan, np.nan  # Handle any unexpected cases
+
+# Apply the split function to Month 8 and other months if necessary
+df['Systolic_BP_Month8'], df['Diastolic_BP_Month8'] = zip(*df['BloodPressure_Month8'].apply(split_bp))
+
+# Repeat for previous months if you want to include them as features
+for i in range(1, 8):  # For months 1 to 7
+    df[f'Systolic_BP_Month{i}'], df[f'Diastolic_BP_Month{i}'] = zip(*df[f'BloodPressure_Month{i}'].apply(split_bp))
+
+# Now drop the original blood pressure columns
+df.drop([f'BloodPressure_Month{i}' for i in range(1, 9)], axis=1, inplace=True)
+
+# Step 5: Update Your Target and Feature Sets
+# Update X and y after adding the new blood pressure columns
+X = df.drop(['Name', 'Systolic_BP_Month8', 'Diastolic_BP_Month8', 
+             'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8'], axis=1)
+y = df[['Systolic_BP_Month8', 'Diastolic_BP_Month8', 'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8']]
+
+# Make sure to drop any datetime columns as previously mentioned
+X = X.select_dtypes(exclude=['datetime64'])
+
+# Step 6: Data Preprocessing
+# Identify categorical columns
+categorical_cols = X.select_dtypes(include=['object']).columns
+
+# Define the column transformer
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols),
+        ('num', StandardScaler(), X.select_dtypes(include=['float64', 'int64']).columns)
+    ],
+    remainder='passthrough'
+)
+
+# Step 7: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 8: Model Definitions and Training - Random Forest
+rf_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('model', MultiOutputRegressor(RandomForestRegressor(random_state=42)))
+])
+
+# Train the Random Forest model
+rf_pipeline.fit(X_train, y_train)
+rf_predictions = rf_pipeline.predict(X_test)
+
+# Evaluate the Random Forest model
+rf_mse = mean_squared_error(y_test, rf_predictions, multioutput='raw_values')
+rf_r2 = r2_score(y_test, rf_predictions, multioutput='raw_values')
+print(f'Random Forest - Mean Squared Error: {rf_mse}, R^2 Score: {rf_r2}')
+---------------------------------------------------------------------------------------------------------------------
+
+# Gradient Boosting
+
+# Step 1: Importing Necessary Libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 2: Load the Dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Step 3: Feature Engineering
+# Creating target columns for Month 8 based on Month 7 data
+df['BloodPressure_Month8'] = df['BloodPressure_Month7']
+df['CholesterolLevel_Month8'] = df['CholesterolLevel_Month7']
+df['SugarLevel_Month8'] = df['SugarLevel_Month7']
+df['BMI_Month8'] = df['BMI_Month7']
+df['HbA1c_Month8'] = df['HbA1c_Month7']
+
+# Step 4: Modify the Blood Pressure Columns
+def split_bp(bp_value):
+    try:
+        systolic, diastolic = map(int, bp_value.split('/'))
+        return systolic, diastolic
+    except:
+        return np.nan, np.nan  # Handle any unexpected cases
+
+df['Systolic_BP_Month8'], df['Diastolic_BP_Month8'] = zip(*df['BloodPressure_Month8'].apply(split_bp))
+for i in range(1, 8):
+    df[f'Systolic_BP_Month{i}'], df[f'Diastolic_BP_Month{i}'] = zip(*df[f'BloodPressure_Month{i}'].apply(split_bp))
+df.drop([f'BloodPressure_Month{i}' for i in range(1, 9)], axis=1, inplace=True)
+
+# Step 5: Update Your Target and Feature Sets
+X = df.drop(['Name', 'Systolic_BP_Month8', 'Diastolic_BP_Month8', 
+             'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8'], axis=1)
+y = df[['Systolic_BP_Month8', 'Diastolic_BP_Month8', 'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8']]
+X = X.select_dtypes(exclude=['datetime64'])
+
+# Step 6: Data Preprocessing
+categorical_cols = X.select_dtypes(include=['object']).columns
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols),
+        ('num', StandardScaler(), X.select_dtypes(include=['float64', 'int64']).columns)
+    ],
+    remainder='passthrough'
+)
+
+# Step 7: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 8: Model Definitions and Training - Gradient Boosting
+gb_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('model', MultiOutputRegressor(GradientBoostingRegressor(random_state=42)))
+])
+
+# Train the Gradient Boosting model
+gb_pipeline.fit(X_train, y_train)
+gb_predictions = gb_pipeline.predict(X_test)
+
+# Evaluate the Gradient Boosting model
+gb_mse = mean_squared_error(y_test, gb_predictions, multioutput='raw_values')
+gb_r2 = r2_score(y_test, gb_predictions, multioutput='raw_values')
+print(f'Gradient Boosting - Mean Squared Error: {gb_mse}, R^2 Score: {gb_r2}')
+---------------------------------------------------------------------------------------------------------------
+
+#6.3 XGBoost
+
+# Step 1: Importing Necessary Libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.multioutput import MultiOutputRegressor
+from xgboost import XGBRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 2: Load the Dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Step 3: Feature Engineering
+df['BloodPressure_Month8'] = df['BloodPressure_Month7']
+df['CholesterolLevel_Month8'] = df['CholesterolLevel_Month7']
+df['SugarLevel_Month8'] = df['SugarLevel_Month7']
+df['BMI_Month8'] = df['BMI_Month7']
+df['HbA1c_Month8'] = df['HbA1c_Month7']
+
+# Step 4: Modify the Blood Pressure Columns
+def split_bp(bp_value):
+    try:
+        systolic, diastolic = map(int, bp_value.split('/'))
+        return systolic, diastolic
+    except:
+        return np.nan, np.nan  # Handle any unexpected cases
+
+df['Systolic_BP_Month8'], df['Diastolic_BP_Month8'] = zip(*df['BloodPressure_Month8'].apply(split_bp))
+for i in range(1, 8):
+    df[f'Systolic_BP_Month{i}'], df[f'Diastolic_BP_Month{i}'] = zip(*df[f'BloodPressure_Month{i}'].apply(split_bp))
+df.drop([f'BloodPressure_Month{i}' for i in range(1, 9)], axis=1, inplace=True)
+
+# Step 5: Update Your Target and Feature Sets
+X = df.drop(['Name', 'Systolic_BP_Month8', 'Diastolic_BP_Month8', 
+             'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8'], axis=1)
+y = df[['Systolic_BP_Month8', 'Diastolic_BP_Month8', 'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8']]
+X = X.select_dtypes(exclude=['datetime64'])
+
+# Step 6: Data Preprocessing
+categorical_cols = X.select_dtypes(include=['object']).columns
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols),
+        ('num', StandardScaler(), X.select_dtypes(include=['float64', 'int64']).columns)
+    ],
+    remainder='passthrough'
+)
+
+# Step 7: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 8: Model Definitions and Training - XGBoost
+xgb_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('model', MultiOutputRegressor(XGBRegressor(random_state=42)))
+])
+
+# Train the XGBoost model
+xgb_pipeline.fit(X_train, y_train)
+xgb_predictions = xgb_pipeline.predict(X_test)
+
+# Evaluate the XGBoost model
+xgb_mse = mean_squared_error(y_test, xgb_predictions, multioutput='raw_values')
+xgb_r2 = r2_score(y_test, xgb_predictions, multioutput='raw_values')
+print(f'XGBoost - Mean Squared Error: {xgb_mse}, R^2 Score: {xgb_r2}')
+
+---------------------------------------------------------------------------------------------------------------------------------
+
+#6.4 LightGBM
+
+# Step 1: Importing Necessary Libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.multioutput import MultiOutputRegressor
+from lightgbm import LGBMRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 2: Load the Dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Step 3: Feature Engineering
+df['BloodPressure_Month8'] = df['BloodPressure_Month7']
+df['CholesterolLevel_Month8'] = df['CholesterolLevel_Month7']
+df['SugarLevel_Month8'] = df['SugarLevel_Month7']
+df['BMI_Month8'] = df['BMI_Month7']
+df['HbA1c_Month8'] = df['HbA1c_Month7']
+
+# Step 4: Modify the Blood Pressure Columns
+def split_bp(bp_value):
+    try:
+        systolic, diastolic = map(int, bp_value.split('/'))
+        return systolic, diastolic
+    except:
+        return np.nan, np.nan  # Handle any unexpected cases
+
+df['Systolic_BP_Month8'], df['Diastolic_BP_Month8'] = zip(*df['BloodPressure_Month8'].apply(split_bp))
+for i in range(1, 8):
+    df[f'Systolic_BP_Month{i}'], df[f'Diastolic_BP_Month{i}'] = zip(*df[f'BloodPressure_Month{i}'].apply(split_bp))
+df.drop([f'BloodPressure_Month{i}' for i in range(1, 9)], axis=1, inplace=True)
+
+# Step 5: Update Your Target and Feature Sets
+X = df.drop(['Name', 'Systolic_BP_Month8', 'Diastolic_BP_Month8', 
+             'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8'], axis=1)
+y = df[['Systolic_BP_Month8', 'Diastolic_BP_Month8', 'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8']]
+X = X.select_dtypes(exclude=['datetime64'])
+
+# Step 6: Data Preprocessing
+categorical_cols = X.select_dtypes(include=['object']).columns
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols),
+        ('num', StandardScaler(), X.select_dtypes(include=['float64', 'int64']).columns)
+    ],
+    remainder='passthrough'
+)
+
+# Step 7: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 8: Model Definitions and Training - LightGBM
+lgbm_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('model', MultiOutputRegressor(LGBMRegressor(random_state=42)))
+])
+
+# Train the LightGBM model
+lgbm_pipeline.fit(X_train, y_train)
+lgbm_predictions = lgbm_pipeline.predict(X_test)
+
+# Evaluate the LightGBM model
+lgbm_mse = mean_squared_error(y_test, lgbm_predictions, multioutput='raw_values')
+lgbm_r2 = r2_score(y_test, lgbm_predictions, multioutput='raw_values')
+print(f'LightGBM - Mean Squared Error: {lgbm_mse}, R^2 Score: {lgbm_r2}')
+
+---------------------------------------------------------------------------------------------------------------------
+
+#6.5 Linear Regression
+
+# Step 1: Importing Necessary Libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 2: Load the Dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Step 3: Feature Engineering
+df['BloodPressure_Month8'] = df['BloodPressure_Month7']
+df['CholesterolLevel_Month8'] = df['CholesterolLevel_Month7']
+df['SugarLevel_Month8'] = df['SugarLevel_Month7']
+df['BMI_Month8'] = df['BMI_Month7']
+df['HbA1c_Month8'] = df['HbA1c_Month7']
+
+# Step 4: Modify the Blood Pressure Columns
+def split_bp(bp_value):
+    try:
+        systolic, diastolic = map(int, bp_value.split('/'))
+        return systolic, diastolic
+    except:
+        return np.nan, np.nan  # Handle any unexpected cases
+
+df['Systolic_BP_Month8'], df['Diastolic_BP_Month8'] = zip(*df['BloodPressure_Month8'].apply(split_bp))
+for i in range(1, 8):
+    df[f'Systolic_BP_Month{i}'], df[f'Diastolic_BP_Month{i}'] = zip(*df[f'BloodPressure_Month{i}'].apply(split_bp))
+df.drop([f'BloodPressure_Month{i}' for i in range(1, 9)], axis=1, inplace=True)
+
+# Step 5: Update Your Target and Feature Sets
+X = df.drop(['Name', 'Systolic_BP_Month8', 'Diastolic_BP_Month8', 
+             'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8'], axis=1)
+y = df[['Systolic_BP_Month8', 'Diastolic_BP_Month8', 'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8']]
+X = X.select_dtypes(exclude=['datetime64'])
+
+# Step 6: Data Preprocessing
+categorical_cols = X.select_dtypes(include=['object']).columns
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols),
+        ('num', StandardScaler(), X.select_dtypes(include=['float64', 'int64']).columns)
+    ],
+    remainder='passthrough'
+)
+
+# Step 7: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 8: Model Definitions and Training - Linear Regression
+lr_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('model', MultiOutputRegressor(LinearRegression()))
+])
+
+# Train the Linear Regression model
+lr_pipeline.fit(X_train, y_train)
+lr_predictions = lr_pipeline.predict(X_test)
+
+# Evaluate the Linear Regression model
+lr_mse = mean_squared_error(y_test, lr_predictions, multioutput='raw_values')
+lr_r2 = r2_score(y_test, lr_predictions, multioutput='raw_values')
+print(f'Linear Regression - Mean Squared Error: {lr_mse}, R^2 Score: {lr_r2}')
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+#6.6 Neural Network (MLP)
+
+# Step 1: Importing Necessary Libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.multioutput import MultiOutputRegressor
+from sklearn.neural_network import MLPRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Step 2: Load the Dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx', engine='openpyxl')
+
+# Step 3: Feature Engineering
+df['BloodPressure_Month8'] = df['BloodPressure_Month7']
+df['CholesterolLevel_Month8'] = df['CholesterolLevel_Month7']
+df['SugarLevel_Month8'] = df['SugarLevel_Month7']
+df['BMI_Month8'] = df['BMI_Month7']
+df['HbA1c_Month8'] = df['HbA1c_Month7']
+
+# Step 4: Modify the Blood Pressure Columns
+def split_bp(bp_value):
+    try:
+        systolic, diastolic = map(int, bp_value.split('/'))
+        return systolic, diastolic
+    except:
+        return np.nan, np.nan  # Handle any unexpected cases
+
+df['Systolic_BP_Month8'], df['Diastolic_BP_Month8'] = zip(*df['BloodPressure_Month8'].apply(split_bp))
+for i in range(1, 8):
+    df[f'Systolic_BP_Month{i}'], df[f'Diastolic_BP_Month{i}'] = zip(*df[f'BloodPressure_Month{i}'].apply(split_bp))
+df.drop([f'BloodPressure_Month{i}' for i in range(1, 9)], axis=1, inplace=True)
+
+# Step 5: Update Your Target and Feature Sets
+X = df.drop(['Name', 'Systolic_BP_Month8', 'Diastolic_BP_Month8', 
+             'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8'], axis=1)
+y = df[['Systolic_BP_Month8', 'Diastolic_BP_Month8', 'CholesterolLevel_Month8', 'SugarLevel_Month8', 'BMI_Month8', 'HbA1c_Month8']]
+X = X.select_dtypes(exclude=['datetime64'])
+
+# Step 6: Data Preprocessing
+categorical_cols = X.select_dtypes(include=['object']).columns
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols),
+        ('num', StandardScaler(), X.select_dtypes(include=['float64', 'int64']).columns)
+    ],
+    remainder='passthrough'
+)
+
+# Step 7: Train-Test Split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Step 8: Model Definitions and Training - Neural Network (MLP)
+mlp_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('model', MultiOutputRegressor(MLPRegressor(random_state=42, max_iter=1000)))
+])
+
+# Train the MLP model
+mlp_pipeline.fit(X_train, y_train)
+mlp_predictions = mlp_pipeline.predict(X_test)
+
+# Evaluate the MLP model
+mlp_mse = mean_squared_error(y_test, mlp_predictions, multioutput='raw_values')
+mlp_r2 = r2_score(y_test, mlp_predictions, multioutput='raw_values')
+print(f'Neural Network (MLP) - Mean Squared Error: {mlp_mse}, R^2 Score: {mlp_r2}')
+
+-------------------------------------------------------------------------------------------------------
+
+#Predicting the best model for 8th month prediction of prameter values to be shown in the App UI
+
+import numpy as np
+import pandas as pd
+
+# Define the model names
+model_names = ['Random Forest', 'Gradient Boosting', 'XGBoost', 'LightGBM', 'Linear Regression', 'Neural Network']
+
+# Define the MSE and R^2 values for each model
+mse_values = {
+    'Random Forest': np.array([3.25515000e-03, 1.25555000e-03, 2.19723377e-03, 1.13887538e-02, 3.66474285e-04, 3.07994000e-06]),
+    'Gradient Boosting': np.array([6.49225763e-04, 2.34381457e-06, 9.17985592e-02, 8.65944049e-02, 2.45517921e-03, 2.21837115e-04]),
+    'XGBoost': np.array([1.24961521e-03, 5.13777867e-06, 1.08672534e-01, 1.08961857e-01, 3.36498787e-03, 2.43614456e-04]),
+    'LightGBM': np.array([0.02210943, 0.01002112, 0.08256218, 0.0807795, 0.00290511, 0.00020087]),
+    'Linear Regression': np.array([2.86383851e-03, 1.04105016e-03, 1.24972654e-02, 2.83277382e-02, 4.42152283e-04, 9.16403545e-05]),
+    'Neural Network': np.array([3.35819862, 1.94427992, 6.53825886, 1.30820423, 4.45344938, 0.32532561])
+}
+
+r2_values = {
+    'Random Forest': np.array([0.99998937, 0.99998981, 0.99999804, 0.99998923, 0.99998635, 0.99999906]),
+    'Gradient Boosting': np.array([0.99999788, 0.99999998, 0.999918, 0.99991813, 0.99990855, 0.99993233]),
+    'XGBoost': np.array([0.99999592, 0.99999996, 0.99990292, 0.99989698, 0.99987466, 0.99992569]),
+    'LightGBM': np.array([0.99992783, 0.99991863, 0.99992625, 0.99992363, 0.99989179, 0.99993873]),
+    'Linear Regression': np.array([0.99999065, 0.99999155, 0.99998884, 0.99997322, 0.99998353, 0.99997205]),
+    'Neural Network': np.array([0.94748899, 0.94873485, 0.97708963, 0.89192809, 0.93411576, 0.90076582])
+}
+
+# Create DataFrames for easier comparison
+mse_df = pd.DataFrame(mse_values, index=['Parameter1', 'Parameter2', 'Parameter3', 'Parameter4', 'Parameter5', 'Parameter6'])
+r2_df = pd.DataFrame(r2_values, index=['Parameter1', 'Parameter2', 'Parameter3', 'Parameter4', 'Parameter5', 'Parameter6'])
+
+# Calculate the mean MSE and R^2 for each model across all parameters
+mse_mean = mse_df.mean(axis=0)
+r2_mean = r2_df.mean(axis=0)
+
+# Normalize MSE and R^2 for better comparison (higher is better for R^2, lower is better for MSE)
+mse_normalized = 1 / mse_mean  # Invert MSE so higher is better
+r2_normalized = r2_mean
+
+# Combine normalized scores
+combined_scores = mse_normalized + r2_normalized
+
+# Find the best model based on the combined score
+best_model = combined_scores.idxmax()
+
+print("Mean MSE for each model:")
+print(mse_mean)
+print("\nMean R^2 for each model:")
+print(r2_mean)
+print("\nCombined Score (Higher is better):")
+print(combined_scores)
+print(f"\nThe best model is {best_model} with a combined score of {combined_scores[best_model]:.4f}")
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+# Code for predicting the 8th month values of all params by RANDOM FOREST REGRESSOR MODEL
+
+predictions_df.to_excel('D:/DATA SETS, Research papers/dataset main/Predicted_Values_Month8.xlsx', index=False)
+
+file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx'
+df = pd.read_excel(file_path, engine='openpyxl')
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+
+# Load your dataset
+file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx'
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Function to split blood pressure into systolic and diastolic components
+def split_blood_pressure(bp_string):
+    systolic, diastolic = map(int, bp_string.split('/'))
+    return systolic, diastolic
+
+# Split blood pressure into systolic and diastolic columns
+for i in range(1, 8):
+    df[f'Systolic_Month{i}'], df[f'Diastolic_Month{i}'] = zip(*df[f'BloodPressure_Month{i}'].map(split_blood_pressure))
+
+# Function to train and predict
+def train_and_predict(target_column, features):
+    X = df[features]
+    y = df[target_column]
+
+    model = RandomForestRegressor(random_state=42, n_estimators=100)
+    model.fit(X, y)
+    
+    predicted_values = model.predict(X)
+    return predicted_values
+
+# Define feature columns for each parameter
+sugar_features = [f'SugarLevel_Month{i}' for i in range(1, 8)]
+systolic_features = [f'Systolic_Month{i}' for i in range(1, 8)]
+diastolic_features = [f'Diastolic_Month{i}' for i in range(1, 8)]
+cholesterol_features = [f'CholesterolLevel_Month{i}' for i in range(1, 8)]
+bmi_features = [f'BMI_Month{i}' for i in range(1, 8)]
+hba1c_features = [f'HbA1c_Month{i}' for i in range(1, 8)]
+
+# Train the models and predict the 8th month's values for each parameter
+predictions = {}
+predictions['Predicted_SugarLevel_Month8'] = train_and_predict('SugarLevel_Month7', sugar_features)
+predictions['Predicted_Systolic_Month8'] = train_and_predict('Systolic_Month7', systolic_features)
+predictions['Predicted_Diastolic_Month8'] = train_and_predict('Diastolic_Month7', diastolic_features)
+predictions['Predicted_Cholesterol_Month8'] = train_and_predict('CholesterolLevel_Month7', cholesterol_features)
+predictions['Predicted_BMI_Month8'] = train_and_predict('BMI_Month7', bmi_features)
+predictions['Predicted_HbA1c_Month8'] = train_and_predict('HbA1c_Month7', hba1c_features)
+
+# Convert the predictions dictionary to a DataFrame
+predictions_df = pd.DataFrame(predictions)
+
+# Save the predictions to an Excel file
+output_file_path = 'D:/DATA SETS, Research papers/dataset main/Predicted_Values_Month8.xlsx'
+predictions_df.to_excel(output_file_path, index=False)
+
+print(f"Predicted values have been successfully saved to {output_file_path}")
+
+# Display the predictions
+print(predictions_df.head())
+
+--------------------------------------------------------------------------------------------------------------
+
+# now saving the final predicted values of all params(from systolic , diastolic) values to a single blood pressure column. 
+
+import pandas as pd
+
+# Load the previously saved predictions
+file_path = 'D:/DATA SETS, Research papers/dataset main/Predicted_Values_Month8.xlsx'
+predictions_df = pd.read_excel(file_path, engine='openpyxl')
+
+# Combine systolic and diastolic into a single predicted blood pressure value
+predictions_df['Predicted_BloodPressure_Month8'] = predictions_df['Predicted_Systolic_Month8'].astype(str) + '/' + predictions_df['Predicted_Diastolic_Month8'].astype(str)
+
+# Drop the individual systolic and diastolic columns
+predictions_df = predictions_df.drop(columns=['Predicted_Systolic_Month8', 'Predicted_Diastolic_Month8'])
+
+# Save the final predictions to an Excel file
+output_file_path = 'D:/DATA SETS, Research papers/dataset main/Final_Predicted_Values_Month8.xlsx'
+predictions_df.to_excel(output_file_path, index=False)
+
+print(f"Final predicted values have been successfully saved to Final_Predicted_Values_Month8.xlsx")
+
+# Display the final predictions
+print(predictions_df.head())
+
+--------------------------------------------------------------------------------------------------------------------------
+
+#Python Script to store data in MongoDB Compass.
+
+!pip install pandas pymongo
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+#step 2
+#Load the Data and Insert it into MongoDB
+
+import pandas as pd
+from pymongo import MongoClient
+
+# Load your dataset
+file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx'
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Connect to MongoDB
+client = MongoClient('mongodb+srv://aditya001patidar:Myoutlook%402021@cloudapplication.6sh78.mongodb.net/') 
+db = client['DiabetesHealthcareApp']  
+
+# Prepare the collections
+patients_collection = db['patients']
+doctors_collection = db['doctors']
+admins_collection = db['admins']
+
+# Insert patients data
+patients_data = df[['Patient ID', 'Patient Password']].rename(columns={'Patient ID': 'username', 'Patient Password': 'password'}).to_dict('records')
+patients_collection.insert_many(patients_data)
+
+# Insert doctors data
+doctors_data = df[['Doctor ID', 'Doctor Password']].rename(columns={'Doctor ID': 'username', 'Doctor Password': 'password'}).to_dict('records')
+doctors_collection.insert_many(doctors_data)
+
+# Insert admins data
+admins_data = df[['Admin ID', 'Admin Password']].rename(columns={'Admin ID': 'username', 'Admin Password': 'password'}).to_dict('records')
+admins_collection.insert_many(admins_data)
+
+print("Login credentials have been successfully inserted into MongoDB.")
+
+# Now update patients data with gender and age
+for index, row in df.iterrows():
+    patient_id = row['Patient ID']
+    gender = row['Gender']  
+    age = row['Age']        
+    patients_collection.update_one(
+        {"username": patient_id},
+        {"$set": {"gender": gender, "age": age}}
+    )
+
+print("Patient data updated with gender and age.")
+--------------------------------------------------------------------------------------------------------------
+
+# Inserting the 7 months average values , the latest 7th month value of paramaters, names in the mongodb.
+
+import pandas as pd
+from pymongo import MongoClient
+
+# Function to split blood pressure into systolic and diastolic
+def split_blood_pressure(bp_string):
+    systolic, diastolic = map(int, bp_string.split('/'))
+    return systolic, diastolic
+
+# Load your dataset
+file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx'
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Connect to MongoDB
+client = MongoClient('mongodb+srv://aditya001patidar:Myoutlook%402021@cloudapplication.6sh78.mongodb.net/') 
+db = client['DiabetesHealthcareApp']  
+
+# Prepare the collections
+patients_collection = db['patients']
+
+# Calculate average values and store both averages and latest month's values
+for index, row in df.iterrows():
+    patient_id = row['Patient ID']
+    patient_name = row['Name']  # Assuming 'Name' is the column name in your dataset
+
+    # Calculate average for each parameter
+    avg_sugar_level = row[['SugarLevel_Month1', 'SugarLevel_Month2', 'SugarLevel_Month3', 
+                           'SugarLevel_Month4', 'SugarLevel_Month5', 'SugarLevel_Month6', 'SugarLevel_Month7']].mean()
+    
+    # Split blood pressure and calculate averages for systolic and diastolic separately
+    blood_pressure_values = [split_blood_pressure(row[f'BloodPressure_Month{i}']) for i in range(1, 8)]
+    avg_systolic = sum(bp[0] for bp in blood_pressure_values) / len(blood_pressure_values)
+    avg_diastolic = sum(bp[1] for bp in blood_pressure_values) / len(blood_pressure_values)
+    
+    avg_cholesterol = row[['CholesterolLevel_Month1', 'CholesterolLevel_Month2', 'CholesterolLevel_Month3', 
+                           'CholesterolLevel_Month4', 'CholesterolLevel_Month5', 'CholesterolLevel_Month6', 'CholesterolLevel_Month7']].mean()
+    
+    avg_bmi = row[['BMI_Month1', 'BMI_Month2', 'BMI_Month3', 
+                   'BMI_Month4', 'BMI_Month5', 'BMI_Month6', 'BMI_Month7']].mean()
+    
+    avg_hba1c = row[['HbA1c_Month1', 'HbA1c_Month2', 'HbA1c_Month3', 
+                     'HbA1c_Month4', 'HbA1c_Month5', 'HbA1c_Month6', 'HbA1c_Month7']].mean()
+    
+    # Get latest month's values (7th month)
+    latest_sugar_level = row['SugarLevel_Month7']
+    latest_blood_pressure_systolic, latest_blood_pressure_diastolic = split_blood_pressure(row['BloodPressure_Month7'])
+    latest_cholesterol = row['CholesterolLevel_Month7']
+    latest_bmi = row['BMI_Month7']
+    latest_hba1c = row['HbA1c_Month7']
+    
+    # Update MongoDB document for the patient with both averages, latest values, and patient name
+    patients_collection.update_one(
+        {'username': patient_id},
+        {'$set': {
+            'name': patient_name,  # Adding the patient's name
+            'avg_sugar_level': avg_sugar_level,
+            'latest_sugar_level': latest_sugar_level,
+            'avg_systolic': avg_systolic,
+            'latest_systolic': latest_blood_pressure_systolic,
+            'avg_diastolic': avg_diastolic,
+            'latest_diastolic': latest_blood_pressure_diastolic,
+            'avg_cholesterol': avg_cholesterol,
+            'latest_cholesterol': latest_cholesterol,
+            'avg_bmi': avg_bmi,
+            'latest_bmi': latest_bmi,
+            'avg_hba1c': avg_hba1c,
+            'latest_hba1c': latest_hba1c
+        }},
+        upsert=True
+    )
+
+print("Averages, latest month's values, and patient names have been successfully calculated and stored in MongoDB.")
+-----------------------------------------------------------------------------------------------------------------------------
+
+#Final  
+#adding the Patient ID column in the Updated final predicted values excel file 
+
+import pandas as pd
+
+# Load the main dataset and the predicted values
+main_dataset_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx'
+predictions_path = 'D:/DATA SETS, Research papers/dataset main/Final_Predicted_Values_Month8.xlsx'
+
+main_df = pd.read_excel(main_dataset_path, engine='openpyxl')
+predictions_df = pd.read_excel(predictions_path, engine='openpyxl')
+
+# Extract the Patient ID column from the main dataset
+patient_ids = main_df[['Patient ID']]
+
+# Add the Patient ID column to the predictions DataFrame
+predictions_df = pd.concat([patient_ids, predictions_df], axis=1)
+
+# Save the updated predictions DataFrame back to Excel
+updated_predictions_path = 'D:/DATA SETS, Research papers/dataset main/Updatedfinal_Predicted_Values_Month8.xlsx'
+predictions_df.to_excel(updated_predictions_path, index=False)
+
+print(f"Updated predictions with Patient ID have been successfully saved to Updatedfinal_Predicted_Values_Month8.xlsx")
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+# Storing the Updated final predicted values of all 5 Parameters (blood pressure , sugarlevel, etc )
+
+import pandas as pd
+from pymongo import MongoClient
+
+# Load the predictions from the Excel file
+file_path = 'D:/DATA SETS, Research papers/dataset main/Updatedfinal_Predicted_Values_Month8.xlsx'
+predictions_df = pd.read_excel(file_path, engine='openpyxl')
+
+# Connect to MongoDB
+client = MongoClient('mongodb+srv://aditya001patidar:Myoutlook%402021@cloudapplication.6sh78.mongodb.net/') 
+db = client['DiabetesHealthcareApp']  
+analysis_results_collection = db['Analysis Results']  
+
+# Iterate through the DataFrame and update MongoDB documents
+for index, row in predictions_df.iterrows():
+    patient_id = row['Patient ID']
+    
+    predicted_sugar_level = row['Predicted_SugarLevel_Month8']
+    predicted_blood_pressure = row['Predicted_BloodPressure_Month8']
+    predicted_cholesterol = row['Predicted_Cholesterol_Month8']
+    predicted_bmi = row['Predicted_BMI_Month8']
+    predicted_hba1c = row['Predicted_HbA1c_Month8']
+    
+    # Create a document to insert into the Analysis Results collection
+    analysis_document = {
+        'patient_id': patient_id,
+        'predicted_sugar_level': predicted_sugar_level,
+        'predicted_blood_pressure': predicted_blood_pressure,
+        'predicted_cholesterol': predicted_cholesterol,
+        'predicted_bmi': predicted_bmi,
+        'predicted_hba1c': predicted_hba1c
+    }
+    
+    # Insert the document into the Analysis Results collection
+    analysis_results_collection.insert_one(analysis_document)
+
+print("Predicted values for the 8th month have been successfully stored in the Analysis Results collection in MongoDB.")
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+# Implementing the Rule based system and storing it in MongoDB.
+
+#Rule based system
+
+import pandas as pd
+from pymongo import MongoClient
+
+# Load the predictions from the Excel file
+file_path = 'D:/DATA SETS, Research papers/dataset main/Updatedfinal_Predicted_Values_Month8.xlsx'
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Define a more detailed rule-based system for health suggestions
+def provide_guidance(row):
+    guidance = {
+        "Guidance_SugarLevel": "",
+        "Guidance_BloodPressure": "",
+        "Guidance_Cholesterol": "",
+        "Guidance_BMI": "",
+        "Guidance_HbA1c": ""
+    }
+    
+    # Sugar Level conditions
+    if row['Predicted_SugarLevel_Month8'] > 200:
+        guidance["Guidance_SugarLevel"] = "Your sugar level is critically high. Immediate intervention is necessary with strict diet and medication."
+    elif 150 < row['Predicted_SugarLevel_Month8'] <= 200:
+        guidance["Guidance_SugarLevel"] = "High sugar level detected. Reduce sugar intake and consult your doctor about adjusting medications."
+    elif 100 < row['Predicted_SugarLevel_Month8'] <= 150:
+        guidance["Guidance_SugarLevel"] = "Moderately elevated sugar level. Monitor regularly and maintain a balanced diet."
+    else:
+        guidance["Guidance_SugarLevel"] = "Your sugar level is within a healthy range. Keep up with your current regimen."
+
+    # Blood Pressure conditions
+    systolic, diastolic = map(float, row['Predicted_BloodPressure_Month8'].split('/'))
+    if systolic > 160 or diastolic > 100:
+        guidance["Guidance_BloodPressure"] = "Your blood pressure is critically high. Immediate consultation with a healthcare provider is recommended."
+    elif 140 < systolic <= 160 or 90 < diastolic <= 100:
+        guidance["Guidance_BloodPressure"] = "Elevated blood pressure detected. Consider lifestyle changes and monitor your blood pressure closely."
+    elif 120 < systolic <= 140 or 80 < diastolic <= 90:
+        guidance["Guidance_BloodPressure"] = "Slightly elevated blood pressure. Maintain a healthy diet and regular exercise."
+    else:
+        guidance["Guidance_BloodPressure"] = "Your blood pressure is within a healthy range. Keep up with your current lifestyle."
+
+    # Cholesterol Level conditions
+    if row['Predicted_Cholesterol_Month8'] > 240:
+        guidance["Guidance_Cholesterol"] = "Critically high cholesterol levels detected. Immediate dietary changes and medical consultation required."
+    elif 200 < row['Predicted_Cholesterol_Month8'] <= 240:
+        guidance["Guidance_Cholesterol"] = "High cholesterol levels detected. Reduce saturated fats in your diet and increase physical activity."
+    elif 150 < row['Predicted_Cholesterol_Month8'] <= 200:
+        guidance["Guidance_Cholesterol"] = "Moderately elevated cholesterol levels. Monitor regularly and consider dietary adjustments."
+    else:
+        guidance["Guidance_Cholesterol"] = "Your cholesterol levels are within a healthy range. Maintain your current diet and lifestyle."
+
+    # BMI conditions
+    if row['Predicted_BMI_Month8'] > 30:
+        guidance["Guidance_BMI"] = "Your BMI indicates obesity. Consider weight management through a comprehensive diet and exercise plan."
+    elif 25 < row['Predicted_BMI_Month8'] <= 30:
+        guidance["Guidance_BMI"] = "Overweight BMI detected. Focus on weight management through healthy eating and regular exercise."
+    elif 18.5 < row['Predicted_BMI_Month8'] <= 25:
+        guidance["Guidance_BMI"] = "Your BMI is within the healthy range. Maintain your current lifestyle to keep it steady."
+    else:
+        guidance["Guidance_BMI"] = "Your BMI is below the healthy range. Consider nutritional guidance to reach a healthier weight."
+
+    # HbA1c conditions
+    if row['Predicted_HbA1c_Month8'] > 8.0:
+        guidance["Guidance_HbA1c"] = "Critically high HbA1c levels detected. Urgent review of diabetes management plan is needed."
+    elif 7.0 < row['Predicted_HbA1c_Month8'] <= 8.0:
+        guidance["Guidance_HbA1c"] = "Elevated HbA1c levels detected. Consider adjusting diabetes treatment and monitor closely."
+    elif 5.7 < row['Predicted_HbA1c_Month8'] <= 7.0:
+        guidance["Guidance_HbA1c"] = "Slightly elevated HbA1c levels. Maintain a balanced diet and regular exercise."
+    else:
+        guidance["Guidance_HbA1c"] = "Your HbA1c levels are within a healthy range. Continue with your current regimen."
+
+    return pd.Series(guidance)
+
+# Apply the rule-based system to each row
+guidance_df = df.apply(provide_guidance, axis=1)
+
+# Concatenate the guidance columns back to the original dataframe
+df = pd.concat([df, guidance_df], axis=1)
+
+# Display sample guidance to verify
+print(df.head())
+
+# Save the dataframe with the new Guidance columns
+output_file_path = 'D:/DATA SETS, Research papers/dataset main/Updatedfinal_2_Predicted_Values_Month8.xlsx'
+df.to_excel(output_file_path, index=False)
+-----------------------------------------------------------------------------------------------------------------------
+
+# Now storing the predicted results in MongoDB
+
+
+# Connect to MongoDB
+client = MongoClient('mongodb+srv://aditya001patidar:Myoutlook%402021@cloudapplication.6sh78.mongodb.net/')
+db = client['DiabetesHealthcareApp']
+collection = db['Analysis Results']
+
+# Iterate through the DataFrame and update the MongoDB collection
+for index, row in df.iterrows():
+    collection.update_one(
+        {"patient_id": row['Patient ID']},
+        {"$set": {
+            "Guidance_SugarLevel": row['Guidance_SugarLevel'],
+            "Guidance_BloodPressure": row['Guidance_BloodPressure'],
+            "Guidance_Cholesterol": row['Guidance_Cholesterol'],
+            "Guidance_BMI": row['Guidance_BMI'],
+            "Guidance_HbA1c": row['Guidance_HbA1c']
+        }}
+    )
+
+print("Guidance has been added to the MongoDB collection.")
+
+
+-----------------------------------------------------------------------------------------------------------------------
+
+# inserting the insurance data in mongo Db
+
+import pandas as pd
+from pymongo import MongoClient
+
+# Load the insurance data from the Excel file
+file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx'
+df = pd.read_excel(file_path, engine='openpyxl')
+
+# Connect to MongoDB
+client = MongoClient('mongodb+srv://aditya001patidar:Myoutlook%402021@cloudapplication.6sh78.mongodb.net/')
+db = client['DiabetesHealthcareApp']
+patients_collection = db['patients']
+
+# Iterate through the DataFrame and update the MongoDB collection
+for index, row in df.iterrows():
+    patients_collection.update_one(
+        {"username": row['Patient ID']},
+        {"$set": {"insurance": row['InsuranceDetails']}}
+    )
+
+print("Insurance data has been updated in the MongoDB collection.")
+
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+# Inserting the patient info like BloodGroup, Disease, Medications, DietaryRestrictions,etc in the Doctors collection
+
+
+import pandas as pd
+from pymongo import MongoClient
+
+# Connect to MongoDB
+client = MongoClient('mongodb+srv://aditya001patidar:Myoutlook%402021@cloudapplication.6sh78.mongodb.net/')
+db = client['DiabetesHealthcareApp']
+doctors_collection = db['doctors']
+
+# Read the dataset
+df = pd.read_excel('D:/DATA SETS, Research papers/dataset main/New_Updated_Diabetes_dataset3.xlsx')
+
+# Iterate through each row in the dataset
+for index, row in df.iterrows():
+    patient_data = {
+        "patient_id": row['Patient ID'],
+        "name": row['Name'],
+        "blood_group": row['BloodGroup'],
+        "disease": row['Disease'],
+        "medications": row['Medications'],  # Assuming medications are comma-separated
+        "dietary_restrictions": row['DietaryRestrictions'],  # Assuming dietary restrictions are comma-separated
+        "smoking_status": row['SmokingStatus'],
+        "alcohol_consumption": row['AlcoholConsumption'],
+        
+    }
+
+    # Update the doctor's document with the patient information
+    doctor_username = row['Doctor ID']  
+    doctors_collection.update_one(
+        {"username": doctor_username},
+        {"$push": {"patients": patient_data}}
+    )
+
+print("Patient information has been added to the doctors' collection.")
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+# Migrating data from MongoDB to Azure Cosmos DB
+
+!pip install pymongo
+!pip install azure-cosmos
+
+
+#Step 2: Connect to Your Local MongoDB
+
+from pymongo import MongoClient
+
+# Connect to MongoDB Atlas
+client = MongoClient('mongodb+srv://aditya001patidar:@cloudapplication.6sh78.mongodb.net/')
+db = client['DiabetesHealthcareApp']  
+
+# Collections to be migrated
+patients = db['patients']
+doctors = db['doctors']
+admins = db['admins']
+analysis_results = db['Analysis Results']
+----------------------------------------------------------------------------------------------------------
+
+#Step 3: Connect to Azure Cosmos DB (MongoDB API)
+
+from pymongo import MongoClient
+
+# Replace with your Azure Cosmos DB connection string
+cosmos_client = MongoClient("mongodb://diabetescosmosk6cLV935lilACDbVu8ftQ==@diabetescosmosdb.mongo.cosmos.azure.com:10255/?ssl=true&replicaSet=globaldb&retrywrites=false&maxIdleTimeMS=120000&appName=@diabetescosmosdb@")
+cosmos_db = cosmos_client['DiabetesHealthcareApp']  # Create the target DB in Cosmos
+
+# Define the collections in Cosmos
+cosmos_patients = cosmos_db['patients']
+cosmos_doctors = cosmos_db['doctors']
+cosmos_admins = cosmos_db['admins']
+cosmos_analysis_results = cosmos_db['Analysis Results']
+
+
+-----------------------------------------------------------------------------------------------------
+
+#Step 4: Transfer Data from MongoDB to Azure Cosmos DB
+
+# Transfer patients collection
+for patient in patients.find():
+    cosmos_patients.insert_one(patient)
+
+# Transfer doctors collection
+for doctor in doctors.find():
+    cosmos_doctors.insert_one(doctor)
+
+# Transfer admins collection
+for admin in admins.find():
+    cosmos_admins.insert_one(admin)
+
+# Transfer analysis_results collection
+for result in analysis_results.find():
+    cosmos_analysis_results.insert_one(result)
+
+print("Data transfer completed successfully!")
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+
+
+
