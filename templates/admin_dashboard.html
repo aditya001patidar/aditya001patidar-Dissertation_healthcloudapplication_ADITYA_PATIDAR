@@ -34,12 +34,7 @@
             <p>{{ total_doctors }}</p>
         </div>
 
-        <!-- Total Appointments Card -->
-        <div class="admin-card">
-            <h3>Total Appointments</h3>
-            <p>{{ total_appointments }}</p>
-        </div>
-
+        
     </div>
 
     <!-- Activity Log Section -->
@@ -52,13 +47,5 @@
         </ul>
     </div>
 
-    <!-- System Alerts Section -->
-    <div class="system-alerts-card">
-        <h3>System Alerts</h3>
-        <ul>
-            {% for alert in system_alerts %}
-                <li>{{ alert.type }}: {{ alert.message }}</li>
-            {% endfor %}
-        </ul>
-    </div>
+    
 {% endblock %}
