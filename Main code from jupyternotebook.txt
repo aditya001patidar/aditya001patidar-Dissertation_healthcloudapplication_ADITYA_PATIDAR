@@ -13,12 +13,8 @@ patient_ids = [fake.uuid4() for _ in range(num_rows)]
 names = [fake.name() for _ in range(num_rows)]
 ages = [random.randint(18, 90) for _ in range(num_rows)]
 genders = [fake.random_element(elements=('Male', 'Female')) for _ in range(num_rows)]
-addresses = [fake.address().replace('\n', ', ') for _ in range(num_rows)]
-contact_numbers = [fake.phone_number() for _ in range(num_rows)]
-emails = [fake.email() for _ in range(num_rows)]
 blood_groups = [fake.random_element(elements=('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-')) for _ in range(num_rows)]
 diseases = ['Diabetes' for _ in range(num_rows)]
-date_of_diagnosis = [fake.date_this_decade() for _ in range(num_rows)]
 sugar_levels = [round(random.uniform(70, 180), 2) for _ in range(num_rows)]
 hba1c_levels = [round(random.uniform(4.0, 10.0), 1) for _ in range(num_rows)]
 medications = [fake.random_element(elements=('Metformin', 'Glipizide', 'Glyburide', 'Glimepiride')) for _ in range(num_rows)]
@@ -32,18 +28,10 @@ family_histories = [fake.random_element(elements=('Yes', 'No')) for _ in range(n
 smoking_statuses = [fake.random_element(elements=('Current Smoker', 'Former Smoker', 'Never Smoked')) for _ in range(num_rows)]
 alcohol_consumptions = [fake.random_element(elements=('None', 'Occasional', 'Moderate', 'Heavy')) for _ in range(num_rows)]
 regular_checkups = [fake.random_element(elements=('Yes', 'No')) for _ in range(num_rows)]
-emergency_contacts = [fake.phone_number() for _ in range(num_rows)]
 insurance_details = [fake.random_element(elements=('Private', 'Public', 'None')) for _ in range(num_rows)]
 food_intake = [f"{fake.random_element(elements=('Breakfast', 'Lunch', 'Dinner', 'Snack'))}: {fake.random_element(elements=('Apple', 'Banana', 'Chicken', 'Salad', 'Pasta', 'Bread', 'Rice', 'Soup', 'Vegetables'))}, {fake.random_int(min=50, max=500)}g, {fake.time()}" for _ in range(num_rows)]
 medication_dosage = [f"{fake.random_element(elements=('Metformin', 'Glipizide', 'Glyburide', 'Glimepiride'))}, {fake.random_int(min=1, max=4)} pills, {fake.time()}" for _ in range(num_rows)]
 exercise_details = [f"{fake.random_element(elements=('Running', 'Walking', 'Cycling', 'Swimming', 'Yoga', 'Gym'))}, {fake.random_int(min=10, max=120)} minutes" for _ in range(num_rows)]
-doctor_names = [fake.name() for _ in range(num_rows)]
-unique_hospital_names = [fake.company() for _ in range(50)] 
-unique_administrator_names = [fake.name() for _ in range(50)]  
-
-#Assign hospital names, and administrator names
-hospital_names = [unique_hospital_names[i % len(unique_hospital_names)] for i in range(num_rows)]
-administrator_names = [unique_administrator_names[i % len(unique_administrator_names)] for i in range(num_rows)]
 
 
 # Create DataFrame
@@ -52,12 +40,8 @@ df = pd.DataFrame({
     'Name': names,
     'Age': ages,
     'Gender': genders,
-    'Address': addresses,
-    'ContactNumber': contact_numbers,
-    'Email': emails,
     'BloodGroup': blood_groups,
     'Disease': diseases,
-    'DateOfDiagnosis': date_of_diagnosis,
     'SugarLevel': sugar_levels,
     'HbA1c': hba1c_levels,
     'Medications': medications,
@@ -166,7 +150,7 @@ output_file_path = 'D:/DATA SETS, Research papers/dataset main/New_Updated_Diabe
 df.to_excel(output_file_path, index=False)
 
 print(f"7 months of data added and dataset saved as 'New_Updated_Diabetes_dataset3.xlsx'")
-------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
 
 # adding the adminID and doctorID column along with their passwords in the dataset.
 #New_Updated_Diabetes_dataset3
@@ -288,7 +272,7 @@ fig.delaxes(axs[3, 1])
 # Adjust layout
 plt.tight_layout()
 plt.show()
---------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
 
 #2 A Plot distribution of Gender, Dietary Restrictions, Medication Type
 
@@ -316,7 +300,7 @@ ax.set_title('Medication Type Distribution')
 ax.bar_label(ax.containers[0], fmt='%d')  
 plt.show()
 
-----------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
 #Statistical summary
 
 #1 Statistical Summary
@@ -546,7 +530,7 @@ ax = sns.barplot(x='ExerciseRegimen', y='Avg_HbA1c', hue='FamilyHistory', data=d
 plt.title('Average HbA1c by Exercise Regimen and Family History')
 annotate_bars(ax)
 plt.show()
-----------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------
 
 #Main ML code below
 
