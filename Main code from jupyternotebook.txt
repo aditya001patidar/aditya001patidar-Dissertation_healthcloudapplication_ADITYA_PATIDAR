@@ -59,10 +59,7 @@ df = pd.DataFrame({
     'InsuranceDetails': insurance_details,
     'FoodIntake': food_intake,
     'MedicationDosage': medication_dosage,
-    'ExerciseDetails': exercise_details,
-    'DoctorName': doctor_names,
-    'HospitalName': hospital_names,  
-    'AdministratorName': administrator_names  
+    'ExerciseDetails': exercise_details, 
 })
 
 # Save DataFrame to CSV
