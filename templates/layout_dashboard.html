@@ -27,9 +27,7 @@
         {% if session['user_type'] == 'patient' %}
             <a href="{{ url_for('patient_dashboard') }}">My Profile</a>
             <a href="{{ url_for('suggestions') }}">Treatment Plan</a>
-            <a href="#prescriptions">Prescriptions</a>
-            <a href="#doc">See My Doc</a>
-            <a href="#health">Health Record</a>
+           
             <a href="{{ url_for('insurance') }}">Insurance</a>
         {% elif session['user_type'] == 'doctor' %}
             <a href="{{ url_for('doctor_dashboard') }}">Dashboard</a>
